@@ -476,25 +476,29 @@ CONTAINS
     IF ( FIRST ) THEN
        ! Check if ExtState variables DRYCOEFF is defined. Otherwise, try to
        ! read it from settings.
-       IF ( .NOT. ASSOCIATED(ExtState%DRYCOEFF) ) THEN
-          CALL GetExtOpt( HcoState%Config, Inst%ExtNr, 'DRYCOEFF', &
-                           OptValChar=DMY, FOUND=FOUND, RC=RC )
-          IF ( .NOT. FOUND ) THEN
-             CALL HCO_ERROR( 'DRYCOEFF not defined', RC )
-             RETURN
-          ENDIF
-          ALLOCATE(VecDp(MaxDryCoeff))
-          CALL HCO_CharSplit( DMY, HCO_GetOpt(HcoState%Config%ExtList,'Separator'), &
-                              HCO_GetOpt(HcoState%Config%ExtList,'Wildcard'), VecDp, N, RC )
-          IF ( RC /= HCO_SUCCESS ) THEN
-              CALL HCO_ERROR( 'ERROR 28', RC, THISLOC=LOC )
-              RETURN
-          ENDIF
-          ALLOCATE(Inst%DRYCOEFF(N))
-          Inst%DRYCOEFF(1:N) = VecDp(1:N)
-          ExtState%DRYCOEFF => Inst%DRYCOEFF
-          DEALLOCATE(VecDp)
-       ENDIF
+       !IF ( .NOT. ASSOCIATED(ExtState%DRYCOEFF) ) THEN
+       !   CALL GetExtOpt( HcoState%Config, Inst%ExtNr, 'DRYCOEFF', &
+       !                    OptValChar=DMY, FOUND=FOUND, RC=RC )
+       !   IF ( .NOT. FOUND ) THEN
+       !      CALL HCO_ERROR( 'DRYCOEFF not defined', RC )
+       !      RETURN
+       !   ENDIF
+       !   ALLOCATE(VecDp(MaxDryCoeff))
+       !   CALL HCO_CharSplit( DMY, HCO_GetOpt(HcoState%Config%ExtList,'Separator'), &
+       !                       HCO_GetOpt(HcoState%Config%ExtList,'Wildcard'), VecDp, N, RC )
+       !   IF ( RC /= HCO_SUCCESS ) THEN
+       !       CALL HCO_ERROR( 'ERROR 28', RC, THISLOC=LOC )
+       !       RETURN
+       !   ENDIF
+       !   ALLOCATE(Inst%DRYCOEFF(N))
+       !   Inst%DRYCOEFF(1:N) = VecDp(1:N)
+       !   ExtState%DRYCOEFF => Inst%DRYCOEFF
+       !   DEALLOCATE(VecDp)
+       !ENDIF
+       ! originally by hjweng, adapted by yjzhang
+       ALLOCATE(Inst%DRYCOEFF(20))
+       Inst%DRYCOEFF(1:20) = (/-0.358,3.02,3.85,-0.0978,-3.66,12.0,0.252,-7.8,0.23,0.274,1.14,-2.19,0.261,-4.62,0.685,-0.254,4.37,-0.266,-0.159,-0.206/)
+       ExtState%DRYCOEFF => Inst%DRYCOEFF
     ENDIF
 
     !---------------------------------------------------------------
@@ -608,7 +612,9 @@ CONTAINS
        IF ( Inst%LANDTYPE(1)%VAL(I,J) == 1.0_hp ) CYCLE
 
        ! Get Deposited Fertilizer DEP_FERT [kg NO/m2]
-       CALL Get_Dep_N( I, J, ExtState, HcoState, Inst, Dep_Fert )
+       ! originally by hjweng, adapted by yjzhang
+       !CALL Get_Dep_N( I, J, ExtState, HcoState, Inst, Dep_Fert )
+       DEP_FERT = 0.0_hp
 
        ! Get N fertilizer reservoir associated with chemical and
        ! manure fertilizer [kg NO/m2]
@@ -991,8 +997,9 @@ CONTAINS
     ExtState%CLDFRC%DoUse    = .TRUE.
 
     ! Activate required deposition parameter
-    ExtState%DRY_TOTN%DoUse  = .TRUE.
-    ExtState%WET_TOTN%DoUse  = .TRUE.
+    ! originally by hjweng, adapted by yjzhang
+    ExtState%DRY_TOTN%DoUse  = .FALSE.
+    ExtState%WET_TOTN%DoUse  = .FALSE.
 
     ! Leave w/ success
     Inst => NULL()
