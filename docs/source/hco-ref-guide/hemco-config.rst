@@ -1397,21 +1397,24 @@ to the base emissions through the corresponding
 Oper
 ----
 
-Scale factor operator. Determines the operation performed on the
-scale factor.  Possible values are:
+Scale factor operator. Determines how the scale factor will be used to
+scale the emissions.
 
 .. list-table::
    :header-rows: 1
-   :widths: 15 85
 
-   * - Oper
-     - What this does
-   * - ``1``
-     - Multiplication (Emission = Base \* Scale)
-   * - ``-1``
-     - Division (Emission = Base / Scale)
-   * - ``2``
-     - Squared (Emission = Base \* Scale**2)
+   * - Value
+     - Operation
+     - Behavior
+   * - 1
+     - Multiplication
+     - Emission = Base \* Scale
+   * - -1
+     - Division
+     - Emission = Base / Scale
+   * - 2
+     - Squared
+     - Emission = Base \* Scale**2
 
 .. _hco-cfg-base-scale-maskid:
 
@@ -1467,14 +1470,36 @@ using):
 
 The required attributes for mask fields are described below:
 
-Options :ref:`hco-cfg-base-scale-scalid` and
-:ref:`hco-cfg-base-scale-oper` are described in
-:ref:`hco-cfg-scalefac`.
+Option :ref:`hco-cfg-base-scale-scalid` is described in
+:ref:`hco-cfg-scalefac`.  Options :ref:`hco-cfg-base-sourcefile`,
+:ref:`hco-cfg-base-sourcevar`, :ref:`hco-cfg-base-sourcetime`,
+:ref:`hco-cfg-base-cre`, :ref:`hco-cfg-base-srcdim`, and
+:ref:`hco-cfg-base-srcunit` are described in :ref:`hco-cfg-base`.
 
-Options :ref:`hco-cfg-base-sourcefile`, :ref:`hco-cfg-base-sourcevar`,
-:ref:`hco-cfg-base-sourcetime`, :ref:`hco-cfg-base-cre`,
-:ref:`hco-cfg-base-srcdim`, and :ref:`hco-cfg-base-srcunit` are
-described in :ref:`hco-cfg-base`.
+The **Oper** setting specifies the mask operator:
+
+.. list-table::
+   :header-rows: 1
+
+   * - Value
+     - Operation
+     - Behavior
+   * - 1
+     - Multiplication
+     - Emission = Base \* Mask
+   * - -1
+     - Division
+     - Emission = Base / Mask
+   * - 2
+     - Squared
+     - Emission = Base \* Mask**2
+   * - 3
+     - Mirror
+     - Emission = Base \* (1 - Mask) |br|
+       |br|
+       Use this option if you wish to exclude emissions from within
+       the mask region and keep emissions outside of the mask region.
+
 
 The :envvar:`Box` option is deprecated.
 
