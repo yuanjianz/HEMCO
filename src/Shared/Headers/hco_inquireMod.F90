@@ -1,7 +1,9 @@
-#ifdef ESMF_
-! We only need to refer to this include file if we are connecting
-! to the GEOS-5 GCM via the ESMF/MAPL framework (bmy, 8/3/12)
+#ifdef MAPL_ESMF
+#ifdef MAPL3
+#include "MAPL.h"
+#else
 #include "MAPL_Generic.h"
+#endif
 #endif
 !------------------------------------------------------------------------
 !     NASA/GSFC, Global Modeling and Assimilation Office, Code 910.1    !
@@ -19,12 +21,6 @@ MODULE HCO_inquireMod
 !
 ! !USES:
 !
-#ifdef ESMF_
-  ! We only need to refer to these modules if we are connecting
-  ! to the GEOS-5 GCM via the ESMF/MAPL framework (bmy, 8/3/12)
-  USE ESMF
-  USE MAPLBase_Mod
-#endif
 
   IMPLICIT NONE
   PRIVATE
@@ -57,6 +53,10 @@ MODULE HCO_inquireMod
 !
 ! !USES:
 !
+#ifdef MAPL3
+    USE mapl_ErrorHandlingMod, only: MAPL_Verify
+#endif
+
     IMPLICIT NONE
 !
 ! !INPUT PARAMETERS:
@@ -76,16 +76,11 @@ MODULE HCO_inquireMod
 !
 ! !LOCAL VARIABLES:
 !
-    INTEGER                    :: i, rc, status
+    INTEGER                    :: i, status
     LOGICAL                    :: exists        ! File existence
     LOGICAL                    :: found         ! Detect unused logical unit
     LOGICAL                    :: open          ! Is open?
-
-#ifdef ESMF_
-    CHARACTER(LEN=ESMF_MAXSTR) :: Iam
-#else
-    CHARACTER(LEN=255)         :: Iam
-#endif
+    LOGICAL                    :: rc
 !
 ! !DEFINED PARAMETERS
 !
@@ -94,10 +89,9 @@ MODULE HCO_inquireMod
     !======================================================================
     ! Initialization
     !======================================================================
-    Iam = "GEOSCHEMCHEM::findFreeLUN"
-    status = 0
-    rc     = 0
 
+    status = 0
+    
     !======================================================================
     ! Find an available logical unit
     !======================================================================
@@ -115,11 +109,16 @@ MODULE HCO_inquireMod
 
     IF ( .NOT. found ) THEN
        status = 1
-       PRINT *,TRIM( Iam ) // ": No available logical units"
+       PRINT *, "findFreeLUN in hco_inquireMod.F90: No available logical units"
     ENDIF
 
-#ifdef ESMF_
+#ifdef MAPL_ESMF
+#ifdef MAPL3
+    ! Comment out for now
+    !_VERIFY(status)
+#else
     VERIFY_(status)
+#endif
 #endif
 
   END FUNCTION findFreeLUN
