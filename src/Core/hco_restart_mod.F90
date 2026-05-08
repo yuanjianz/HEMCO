@@ -323,7 +323,7 @@ CONTAINS
     ! ------------------------------------------------------------------
     ! Try to get from ESMF internal state
     ! ------------------------------------------------------------------
-    CALL HCO_CopyFromInternal_ESMF( HcoState, TRIM(Name), -1,  &
+    CALL HCO_CopyFromInternal_ESMF( HcoState, TRIM(Name), 1,  &
          FLD, RC, Arr3D=Arr3D )
     IF ( RC /= HCO_SUCCESS ) THEN
         CALL HCO_ERROR( 'ERROR 2', RC, THISLOC=LOC )
@@ -782,11 +782,13 @@ CONTAINS
 !
 ! !LOCAL VARIABLES:
 !
-    INTEGER                      :: STAT, status
+    INTEGER                      :: STAT
     TYPE(ESMF_STATE)             :: internalState
     REAL,                POINTER :: Ptr2D(:,:)
     REAL,                POINTER :: Ptr3D(:,:,:)
-#ifndef MAPL3
+#ifdef MAPL3
+    INTEGER                      :: status
+#else
     TYPE(MAPL_MetaComp), POINTER :: maplState
 #endif
     

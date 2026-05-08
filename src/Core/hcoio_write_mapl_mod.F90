@@ -84,10 +84,10 @@ CONTAINS
 ! !USES:
 !
 #ifdef MAPL3
-# include "MAPL.h"
+#include "MAPL.h"
     USE mapl3g_State_API, only: MAPL_StateGetPointer
 #else
-# include "MAPL_Generic.h"
+#include "MAPL_Generic.h"
     USE MAPLBase_MOD
 #endif
     USE HCO_Types_Mod, ONLY : DiagnCont
@@ -182,7 +182,7 @@ CONTAINS
           CALL MAPL_StateGetPointer ( HcoState%exportState, Ptr2D, &
                TRIM(ThisDiagn%cName), RC=STAT )
 #else
-          CALL MAPL_GetPointer ( HcoState%EXPORT, Ptr2D, &
+          CALL MAPL_GetPointer ( HcoState%exportState, Ptr2D, &
                TRIM(ThisDiagn%cName), NotFoundOk=.TRUE., RC=STAT )
 #endif
 
@@ -199,7 +199,7 @@ CONTAINS
           CALL MAPL_StateGetPointer ( HcoState%exportState, Ptr3D, &
                TRIM(ThisDiagn%cName), RC=STAT )
 #else
-          CALL MAPL_GetPointer ( HcoState%EXPORT, Ptr3D, &
+          CALL MAPL_GetPointer ( HcoState%exportState, Ptr3D, &
                TRIM(ThisDiagn%cName), NotFoundOk=.TRUE., RC=STAT )
 #endif
           IF ( ASSOCIATED(Ptr3D) ) THEN

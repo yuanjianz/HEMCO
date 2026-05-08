@@ -596,7 +596,9 @@ CONTAINS
 !
 ! !LOCAL VARIABLES:
 !
+#ifdef MAPL3
     INTEGER          :: status    
+#endif
     REAL             :: LonR(N), LatR(N)
     REAL, PARAMETER  :: radToDeg = 57.2957795
     TYPE(ESMF_Grid)  :: Grid
@@ -604,7 +606,7 @@ CONTAINS
 #ifndef MAPL3
     ! Defined Iam and STATUS
     __Iam__("HCO_GetHorzIJIndex (hco_geotools_mod.F90)")
-#endif    
+#endif
     
     !-------------------------------
     ! HCO_GetHorzIJIndex begins here

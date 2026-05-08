@@ -53,8 +53,13 @@ MODULE HCO_inquireMod
 !
 ! !USES:
 !
+#ifdef MAPL_ESMF
 #ifdef MAPL3
     USE mapl_ErrorHandlingMod, only: MAPL_Verify
+#else
+    USE ESMF
+    USE MAPLBase_Mod
+#endif
 #endif
 
     IMPLICIT NONE
@@ -80,7 +85,17 @@ MODULE HCO_inquireMod
     LOGICAL                    :: exists        ! File existence
     LOGICAL                    :: found         ! Detect unused logical unit
     LOGICAL                    :: open          ! Is open?
+#ifdef MAPL3
     LOGICAL                    :: rc
+#else
+    INTEGER                    :: rc
+
+#ifdef MAPL_ESMF
+    CHARACTER(LEN=ESMF_MAXSTR) :: Iam
+#else
+    CHARACTER(LEN=255)         :: Iam
+#endif
+#endif
 !
 ! !DEFINED PARAMETERS
 !
@@ -91,7 +106,12 @@ MODULE HCO_inquireMod
     !======================================================================
 
     status = 0
-    
+
+#ifndef MAPL3
+    Iam = "GEOSCHEMCHEM::findFreeLUN"
+    rc     = 0
+#endif
+
     !======================================================================
     ! Find an available logical unit
     !======================================================================

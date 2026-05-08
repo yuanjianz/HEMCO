@@ -622,8 +622,8 @@ CONTAINS
          ASSERT_( ASSOCIATED(HcoState%importState) )
          CALL MAPL_StateGetPointer( HcoState%importState, Ptr2D, TRIM(FldName), _RC )
 #else
-         ASSERT_( ASSOCIATED(HcoState%IMPORT) )
-         CALL MAPL_GetPointer( HcoState%IMPORT, Ptr2D, TRIM(FldName), __RC__ )
+         ASSERT_( ASSOCIATED(HcoState%importState) )
+         CALL MAPL_GetPointer( HcoState%importState, Ptr2D, TRIM(FldName), __RC__ )
 #endif
          CALL HCO_ArrAssert( ExtDat%Arr, HcoState%NX, HcoState%NY, STAT )
          ASSERT_(STAT==HCO_SUCCESS)
@@ -702,8 +702,8 @@ CONTAINS
          ASSERT_( ASSOCIATED(HcoState%importState) )
          CALL MAPL_StateGetPointer( HcoState%importState, Ptr3D, TRIM(FldName), _RC )
 #else
-         ASSERT_( ASSOCIATED(HcoState%IMPORT) )
-         CALL MAPL_GetPointer( HcoState%IMPORT, Ptr3D, TRIM(FldName), __RC__ )
+         ASSERT_( ASSOCIATED(HcoState%importState) )
+         CALL MAPL_GetPointer( HcoState%importState, Ptr3D, TRIM(FldName), __RC__ )
 #endif
          ASSERT_( ASSOCIATED(Ptr3D) )
 
@@ -796,8 +796,8 @@ CONTAINS
          ASSERT_( ASSOCIATED(HcoState%importState) )
          CALL MAPL_StateGetPointer( HcoState%importState, Ptr2D, TRIM(FldName), _RC )
 #else
-         ASSERT_( ASSOCIATED(HcoState%IMPORT) )
-         CALL MAPL_GetPointer( HcoState%IMPORT, Ptr2D, TRIM(FldName), __RC__ )
+         ASSERT_( ASSOCIATED(HcoState%importState) )
+         CALL MAPL_GetPointer( HcoState%importState, Ptr2D, TRIM(FldName), __RC__ )
 #endif
 
          CALL HCO_ArrAssert( ExtDat%Arr, HcoState%NX, HcoState%NY, STAT )
@@ -890,8 +890,8 @@ CONTAINS
          ASSERT_( ASSOCIATED(HcoState%importState) )
          CALL MAPL_StateGetPointer( HcoState%importState, Ptr3D, TRIM(FldName), _RC )
 #else
-         ASSERT_( ASSOCIATED(HcoState%IMPORT) )
-         CALL MAPL_GetPointer( HcoState%IMPORT, Ptr3D, TRIM(FldName), __RC__ )
+         ASSERT_( ASSOCIATED(HcoState%importState) )
+         CALL MAPL_GetPointer( HcoState%importState, Ptr3D, TRIM(FldName), __RC__ )
 #endif
          ASSERT_( ASSOCIATED(Ptr3D) )
 
@@ -978,8 +978,8 @@ CONTAINS
          ASSERT_( ASSOCIATED(HcoState%importState) )
          CALL MAPL_StateGetPointer( HcoState%importState, Ptr2D, TRIM(FldName), _RC )
 #else
-         ASSERT_( ASSOCIATED(HcoState%IMPORT) )
-         CALL MAPL_GetPointer( HcoState%IMPORT, Ptr2D, TRIM(FldName), __RC__ )
+         ASSERT_( ASSOCIATED(HcoState%importState) )
+         CALL MAPL_GetPointer( HcoState%importState, Ptr2D, TRIM(FldName), __RC__ )
 #endif
 
          CALL HCO_ArrAssert( ExtDat%Arr, HcoState%NX, HcoState%NY, STAT )
