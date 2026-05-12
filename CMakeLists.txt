@@ -47,7 +47,7 @@ add_library(HEMCOBuildProperties INTERFACE)
 #---------------------------------------------------------------------
 set(HEMCO_Fortran_FLAGS_Intel
    -cpp -w -auto -noalign "SHELL:-convert big_endian" "SHELL:-fp-model source" -mcmodel=medium
-   -shared-intel -traceback -diag-disable 10448 -DLINUX_IFORT
+   -shared-intel -traceback -DLINUX_IFORT
    CACHE STRING "HEMCO compiler flags for all build types with Intel compilers"
 )
 set(HEMCO_Fortran_FLAGS_RELEASE_Intel
@@ -335,7 +335,7 @@ if(NOT MAPL3)
         INTERFACE $<TARGET_PROPERTY:MAPL.generic,INTERFACE_INCLUDE_DIRECTORIES>
     )
     target_compile_definitions(HEMCOBuildProperties
-        INTERFACE ESMF_ USE_ESMF MAPL_ESMF
+        INTERFACE USE_ESMF MAPL_ESMF
     )
 endif()
 if(MAPL3)
@@ -350,7 +350,7 @@ if(MAPL3)
 	INTERFACE $<TARGET_PROPERTY:MAPL.generic3g,INTERFACE_INCLUDE_DIRECTORIES>
     )
     target_compile_definitions(HEMCOBuildProperties
-        INTERFACE ESMF_ USE_ESMF MAPL_ESMF MAPL3
+        INTERFACE USE_ESMF MAPL_ESMF MAPL3
     )
 endif()
 

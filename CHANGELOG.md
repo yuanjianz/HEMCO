@@ -10,6 +10,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed an error in `src/Shared/GeosUtil/hco_regrid_a2a_mod.F90` where an accumulator was uninitialized before reuse, which may inherit junk data from the previous iteration if the southmost source cell is not found
 - Fixed IF-block logic errors in `SrcFile_Parse` that led to incorrect time-cycling behavior
 
+### Added
+- Added code blocks for MAPL3 code in development
+- Added C-preprocessor switches USE_ESMF and MAPL3
+
+### Changed
+- Renamed subroutine HCO_CopyFromIntnal_ESMF to HCO_CopyFromInternal_ESMF
+- Renamed state objects HcoState%IMPORT and HcoStateEXPORT to HcoState%internalState and HcoState%exportState respectively
+
+#### Removed
+- Removed C-preprocessor switch ESMF_
+
 ## [3.12.1] - 2026-04-08
 ### Changed
 - Updated GitHub Actions to the latest versions

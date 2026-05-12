@@ -184,7 +184,6 @@ CONTAINS
 ! !USES:
 !
 #ifdef MAPL_ESMF
-    USE ESMF
 #ifdef MAPL3
 #include "MAPL.h"
     USE mapl3
@@ -193,7 +192,10 @@ CONTAINS
     USE MAPLBase_Mod
 #endif
 #endif
-!
+#ifdef USE_ESMF
+    USE ESMF
+#endif
+    !
 ! !INPUT PARAMETERS:
 !
     CHARACTER(LEN=*), INTENT(IN   )            :: ErrMsg

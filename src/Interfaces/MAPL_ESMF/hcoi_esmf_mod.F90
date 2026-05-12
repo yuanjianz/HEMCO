@@ -500,12 +500,8 @@ CONTAINS
       IF ( STATUS /= ESMF_SUCCESS ) THEN
          WRITE(*,*) 'Cannot add to export: ',TRIM(SNAME)
          ASSERT_(.FALSE.)
-      !ELSE
-      !   IF ( am_I_Root ) WRITE(*,*) 'adding HEMCO export: ', TRIM(cName)
       ENDIF
 #endif
-
-! ewl: why does this file use ESMF_SUCCESS?
 
       ! Return w/ success
       RETURN_(ESMF_SUCCESS)
