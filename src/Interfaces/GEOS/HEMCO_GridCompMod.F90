@@ -1248,7 +1248,7 @@ CONTAINS
 
     ! Get imports
 #ifdef MAPL3
-    !    CALL MAPL_StateGetPointer ( HcoState%importState,      TH,      'TH', _RC ) 
+    !CALL MAPL_StateGetPointer ( HcoState%importState,      TH,      'TH', _RC ) 
     CALL MAPL_StateGetPointer ( HcoState%importState,     PLE,     'PLE', _RC ) 
     CALL MAPL_StateGetPointer ( HcoState%importState,     ZLE,     'ZLE', _RC ) 
     CALL MAPL_StateGetPointer ( HcoState%importState,       Q,       'Q', _RC ) 
@@ -1256,7 +1256,7 @@ CONTAINS
     CALL MAPL_StateGetPointer ( HcoState%importState,    AREA,    'AREA', _RC )
     CALL MAPL_StateGetPointer ( HcoState%importState, AIRDENS, 'AIRDENS', _RC )
 #else
-    CALL MAPL_GetPointer ( HcoState%importState,      TH,      'TH', __RC__ )
+    !CALL MAPL_GetPointer ( HcoState%importState,      TH,      'TH', __RC__ )
     CALL MAPL_GetPointer ( HcoState%importState,     PLE,     'PLE', __RC__ )
     CALL MAPL_GetPointer ( HcoState%importState,     ZLE,     'ZLE', __RC__ )
     CALL MAPL_GetPointer ( HcoState%importState,       Q,       'Q', __RC__ )

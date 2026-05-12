@@ -184,6 +184,7 @@ CONTAINS
 ! !USES:
 !
 #ifdef MAPL_ESMF
+    USE ESMF
 #ifdef MAPL3
 #include "MAPL.h"
     USE mapl3
@@ -192,10 +193,7 @@ CONTAINS
     USE MAPLBase_Mod
 #endif
 #endif
-#ifdef USE_ESMF
-    USE ESMF
-#endif
-    !
+!
 ! !INPUT PARAMETERS:
 !
     CHARACTER(LEN=*), INTENT(IN   )            :: ErrMsg
@@ -214,7 +212,7 @@ CONTAINS
 !BOC
     INTEGER             :: I, J, hcoLogLUN
     CHARACTER(LEN=1023) :: MSG
-#if defined( USE_ESMF )
+#if defined( MAPL_ESMF )
     INTEGER             :: localPET, STATUS
     CHARACTER(4)        :: localPETchar
     TYPE(ESMF_VM)       :: VM
@@ -229,7 +227,7 @@ CONTAINS
     IF ( PRESENT( LUN ) ) hcoLogLUN = LUN
 
     ! Construct error message
-#ifdef USE_ESMF
+#ifdef MAPL_ESMF
     ! Get current thread number
     CALL ESMF_VMGetCurrent(VM, RC=STATUS)
     !CALL ESMF_VmGet( VM, localPET=localPET, __RC__ )
