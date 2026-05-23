@@ -236,24 +236,43 @@ CONTAINS
        ELSE
 
           !-----------------------------------------------------------
-          ! Other species: read 2D field and multiply by frac
+          ! Other species: read 2D field(s) and multiply by frac.
+          ! Special case: PRPE has two source fields in GFAS
+          ! (hialkenes + c3h6); read both and sum them. All other
+          ! species follow the standard GFAS_<SpcName>_2D convention.
           !-----------------------------------------------------------
-          FieldName = 'GFAS_' // TRIM(Inst%SpcNames(N)) // '_2D'
-
           Inst%Spc2D = 0.0_hp
-          FOUND = .FALSE.
-          CALL HCO_EvalFld( HcoState, TRIM(FieldName), Inst%Spc2D, RC,          &
-                            FOUND=FOUND )
-          IF ( RC /= HCO_SUCCESS .OR. .NOT. FOUND ) THEN
-             WRITE(MSG,*) 'GFAS 2D field "' // TRIM(FieldName) //               &
-                          '" for species "' // TRIM(Inst%SpcNames(N)) //       &
-                          '" not found in HEMCO emissions list (ExtNr=',       &
-                          Inst%ExtNr, '). Please add a base-emissions line ',  &
-                          'for this species, or remove it from the GFAS ',     &
-                          'species list.'
-             CALL HCO_ERROR(MSG, RC, THISLOC=LOC )
-             IF ( ALLOCATED(SpcArr3D) ) DEALLOCATE(SpcArr3D)
-             RETURN
+
+          IF ( TRIM(Inst%SpcNames(N)) == 'PRPE' ) THEN
+
+             ! --- PRPE special case: sum GFAS_PRPE1_2D + GFAS_PRPE2_2D ---
+             CALL Read2DField( HcoState, 'GFAS_PRPE1_2D',                       &
+                               Inst%Spc2D, RC, AddTo=.FALSE.,                   &
+                               ExtNr=Inst%ExtNr, SpcName='PRPE' )
+             IF ( RC /= HCO_SUCCESS ) THEN
+                IF ( ALLOCATED(SpcArr3D) ) DEALLOCATE(SpcArr3D)
+                RETURN
+             ENDIF
+             CALL Read2DField( HcoState, 'GFAS_PRPE2_2D',                       &
+                               Inst%Spc2D, RC, AddTo=.TRUE.,                    &
+                               ExtNr=Inst%ExtNr, SpcName='PRPE' )
+             IF ( RC /= HCO_SUCCESS ) THEN
+                IF ( ALLOCATED(SpcArr3D) ) DEALLOCATE(SpcArr3D)
+                RETURN
+             ENDIF
+
+          ELSE
+
+             ! --- Standard case: single GFAS_<SpcName>_2D field ---
+             FieldName = 'GFAS_' // TRIM(Inst%SpcNames(N)) // '_2D'
+             CALL Read2DField( HcoState, TRIM(FieldName), Inst%Spc2D, RC,       &
+                               AddTo=.FALSE., ExtNr=Inst%ExtNr,                 &
+                               SpcName=TRIM(Inst%SpcNames(N)) )
+             IF ( RC /= HCO_SUCCESS ) THEN
+                IF ( ALLOCATED(SpcArr3D) ) DEALLOCATE(SpcArr3D)
+                RETURN
+             ENDIF
+
           ENDIF
 
 !$OMP PARALLEL DO                                            &
@@ -560,6 +579,80 @@ CONTAINS
     CALL InstRemove( ExtState%GFAS )
 
   END SUBROUTINE HCOX_GFAS_Final
+!EOC
+!------------------------------------------------------------------------------
+!                   Harmonized Emissions Component (HEMCO)                    !
+!------------------------------------------------------------------------------
+!BOP
+!
+! !IROUTINE: Read2DField
+!
+! !DESCRIPTION: Helper to read a 2D HEMCO field by name, with a clear
+! debug message on failure. If AddTo is .TRUE., the read value is added
+! to Arr2D; otherwise Arr2D is overwritten with the read value.
+!
+! !INTERFACE:
+!
+  SUBROUTINE Read2DField( HcoState, FieldName, Arr2D, RC, AddTo,                &
+                          ExtNr, SpcName )
+!
+! !USES:
+!
+    USE HCO_Calc_Mod, ONLY : HCO_EvalFld
+!
+! !INPUT PARAMETERS:
+!
+    CHARACTER(LEN=*), INTENT(IN   ) :: FieldName
+    LOGICAL,          INTENT(IN   ) :: AddTo
+    INTEGER,          INTENT(IN   ) :: ExtNr
+    CHARACTER(LEN=*), INTENT(IN   ) :: SpcName
+!
+! !INPUT/OUTPUT PARAMETERS:
+!
+    TYPE(HCO_State),  POINTER       :: HcoState
+    REAL(hp),         INTENT(INOUT) :: Arr2D(:,:)
+    INTEGER,          INTENT(INOUT) :: RC
+!EOP
+!------------------------------------------------------------------------------
+!BOC
+    REAL(hp), ALLOCATABLE :: Tmp2D(:,:)
+    LOGICAL               :: FOUND
+    INTEGER               :: AS
+    CHARACTER(LEN=255)    :: MSG, LOC
+
+    LOC = 'Read2DField (HCOX_GFAS_MOD.F90)'
+
+    ALLOCATE( Tmp2D(SIZE(Arr2D,1), SIZE(Arr2D,2)), STAT=AS )
+    IF ( AS /= 0 ) THEN
+       CALL HCO_ERROR( 'Cannot allocate Tmp2D in Read2DField', RC,             &
+                       THISLOC=LOC )
+       RETURN
+    ENDIF
+    Tmp2D = 0.0_hp
+
+    FOUND = .FALSE.
+    CALL HCO_EvalFld( HcoState, TRIM(FieldName), Tmp2D, RC, FOUND=FOUND )
+    IF ( RC /= HCO_SUCCESS .OR. .NOT. FOUND ) THEN
+       WRITE(MSG,*) 'GFAS 2D field "' // TRIM(FieldName) //                    &
+                    '" for species "' // TRIM(SpcName) //                      &
+                    '" not found in HEMCO emissions list (ExtNr=',             &
+                    ExtNr, '). Please add a base-emissions line for this ',    &
+                    'field, or remove the species from the GFAS species list.'
+       CALL HCO_ERROR( MSG, RC, THISLOC=LOC )
+       IF ( ALLOCATED(Tmp2D) ) DEALLOCATE(Tmp2D)
+       RETURN
+    ENDIF
+
+    IF ( AddTo ) THEN
+       Arr2D = Arr2D + Tmp2D
+    ELSE
+       Arr2D = Tmp2D
+    ENDIF
+
+    DEALLOCATE(Tmp2D)
+    RC = HCO_SUCCESS
+
+  END SUBROUTINE Read2DField
 !EOC
 !------------------------------------------------------------------------------
 !                   Harmonized Emissions Component (HEMCO)                    !
