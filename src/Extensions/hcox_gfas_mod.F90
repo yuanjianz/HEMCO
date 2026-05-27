@@ -193,7 +193,7 @@ CONTAINS
 !$OMP PARALLEL DO                                            &
 !$OMP DEFAULT( SHARED )                                      &
 !$OMP PRIVATE( I, J, L, ColSum )                             &
-!$OMP SCHEDULE( DYNAMIC. 8 )                                 &
+!$OMP SCHEDULE( DYNAMIC, 8 )                                 &
 !$OMP COLLAPSE( 2 )
     DO J = 1, HcoState%NY
     DO I = 1, HcoState%NX
@@ -279,14 +279,14 @@ CONTAINS
 !$OMP PARALLEL DO                                            &
 !$OMP DEFAULT( SHARED )                                      &
 !$OMP PRIVATE( I, J, L )                                     &
-!$OMP SCHEDULE( DYNAMIC. 8 )                                 &
-!$OMP COLLAPSE( 2 )
-          DO J = 1, HcoState%NY
-          DO I = 1, HcoState%NX
-             DO L = 1, HcoState%NZ
+!$OMP SCHEDULE( DYNAMIC, 8 )                                 &
+!$OMP COLLAPSE( 3 )
+          DO L = 1, HcoState%NZ
+            DO J = 1, HcoState%NY
+              DO I = 1, HcoState%NX
                 SpcArr3D(I,J,L) = Inst%Spc2D(I,J) * Inst%Frac3D(I,J,L)
-             ENDDO
-          ENDDO
+              ENDDO
+            ENDDO
           ENDDO
 !$OMP END PARALLEL DO
 
