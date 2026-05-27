@@ -193,7 +193,8 @@ CONTAINS
 !$OMP PARALLEL DO                                            &
 !$OMP DEFAULT( SHARED )                                      &
 !$OMP PRIVATE( I, J, L, ColSum )                             &
-!$OMP SCHEDULE( DYNAMIC )
+!$OMP SCHEDULE( DYNAMIC. 8 )                                 &
+!$OMP COLLAPSE( 2 )
     DO J = 1, HcoState%NY
     DO I = 1, HcoState%NX
        ColSum = 0.0_hp
@@ -278,7 +279,8 @@ CONTAINS
 !$OMP PARALLEL DO                                            &
 !$OMP DEFAULT( SHARED )                                      &
 !$OMP PRIVATE( I, J, L )                                     &
-!$OMP SCHEDULE( DYNAMIC )
+!$OMP SCHEDULE( DYNAMIC. 8 )                                 &
+!$OMP COLLAPSE( 2 )
           DO J = 1, HcoState%NY
           DO I = 1, HcoState%NX
              DO L = 1, HcoState%NZ
